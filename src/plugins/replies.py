@@ -14,7 +14,7 @@ class Replies(Plugin):
             "Who said that!?",
             "That's my name, don't wear it out.",
             "You called, {mention}?",
-            "Whoa that's my name that's me NaNoBot!",
+            "Whoa that's my name that's me {nick}!",
             "Need something, {mention}?"
         ],
         r"(h(i|ello|ey)|(what'?s |'?s)?up)": [
@@ -39,15 +39,19 @@ class Replies(Plugin):
             "Right back at you!",
             "love u too bby",
             ":eyes:",
-            "NaNoBot x {mention} 4ever"
+            "{nick} x {mention} 4ever"
         ]
     }
 
     async def on_message(self, message):
         if message.author.id == self.bot.user.id:
             return
+        if message.server.me.nick:
+            server_nick = message.server.me.nick
+        else:
+            server_nick = self.bot.user.name
         if re.search(
-                r'\b({}|{})\b'.format(self.bot.__name__, message.server.me.nick),
+                r'\b({}|{})\b'.format(self.bot.__name__, server_nick),
                 message.content,
                 flags=re.IGNORECASE
                 ) or self.bot.user.id in [user.id for user in message.mentions]:
@@ -57,7 +61,11 @@ class Replies(Plugin):
                     continue
                 if re.search(r'\b' + key + r'\b', message.content, flags=re.IGNORECASE):
                     response = random.choice(resps)
-            response = response.replace("{mention}", message.author.mention)
+            response = response.replace(
+                "{mention}", message.author.mention
+            ).replace(
+                "{nick}", server_nick
+            )
 
             await self.bot.send_message(
                 message.channel,
