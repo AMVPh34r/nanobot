@@ -20,7 +20,7 @@ class Replies(Plugin):
         r"(h(i|ello|ey)|(what'?s |'?s)?up)": [
             "Hi there!",
             "Yo!",
-            "Hi, {mention}!",
+            "Hi, {user}!",
             "'Suuup?",
             "Hey!",
             "Hello hello!"
@@ -39,7 +39,8 @@ class Replies(Plugin):
             "Right back at you!",
             "love u too bby",
             ":eyes:",
-            "{nick} x {mention} 4ever"
+            "{nick} x {user} 4ever",
+            "You're not so bad yourself, {user}!"
         ]
     }
 
@@ -62,6 +63,8 @@ class Replies(Plugin):
                 if re.search(r'\b' + key + r'\b', message.content, flags=re.IGNORECASE):
                     response = random.choice(resps)
             response = response.replace(
+                "{user}", message.author.name
+            ).replace(
                 "{mention}", message.author.mention
             ).replace(
                 "{nick}", server_nick

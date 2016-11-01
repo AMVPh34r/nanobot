@@ -9,6 +9,7 @@ from plugins.replies import Replies
 from plugins.magic_eight_ball import EightBall
 from plugins.search import Search
 from plugins.timer import Timer
+from plugins.writein import Writein
 
 # Global plugins
 from plugins.systemlog import SystemLog
