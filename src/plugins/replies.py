@@ -46,8 +46,11 @@ class Replies(Plugin):
     async def on_message(self, message):
         if message.author.id == self.bot.user.id:
             return
-        if re.search(r'\bnanobot\b', message.content, flags=re.IGNORECASE) \
-                or self.bot.user.id in [user.id for user in message.mentions]:
+        if re.search(
+                r'\b({}|{})\b'.format(self.bot.__name__, message.server.me.nick),
+                message.content,
+                flags=re.IGNORECASE
+                ) or self.bot.user.id in [user.id for user in message.mentions]:
             response = random.choice(self.responses[''])
             for key, resps in self.responses.items():
                 if key == "":
