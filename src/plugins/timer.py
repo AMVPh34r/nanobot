@@ -19,7 +19,8 @@ class TimerObj(object):
     async def time_remaining(self):
         if self.remaining < 60:
             return self.remaining, "second{}".format("" if self.remaining == 1 else "s")
-        return self.remaining//60, "minute{}".format("" if self.remaining//60 == 1 else "s")
+        rem_min = int(round(self.remaining/60))
+        return rem_min, "minute{}".format("" if rem_min == 1 else "s")
 
 
 class Timer(Plugin):
