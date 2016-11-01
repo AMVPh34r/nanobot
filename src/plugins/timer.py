@@ -30,8 +30,8 @@ class Timer(Plugin):
     async def get_commands(server):
         commands = [
             {
-                'name': '!timer [i]',
-                'description': 'Start an `[i]`-minute timer.'
+                'name': '!timer [x]',
+                'description': 'Start an `[x]`-minute timer.'
             },
             {
                 'name': '!timer check',
