@@ -149,9 +149,13 @@ class Writein(Plugin):
             await self.bot.send_message(message.channel, response)
             return
 
-        response = "Here's the leaderboard for the current writein:\n{}".format(
-            await self.generate_leaderboard(writein)
-        )
+        if not writein.wordcounts:
+            response = "Looks like nobody's submitted their wordcounts yet, do so with `!writein report [count]` and " \
+                       "try again!"
+        else:
+            response = "Here's the leaderboard for the current writein:\n{}".format(
+                await self.generate_leaderboard(writein)
+            )
         await self.bot.send_message(message.channel, response)
 
     @command(pattern='^!writein finish$')
@@ -171,9 +175,14 @@ class Writein(Plugin):
             return
 
         await writein.finish()
-        response = "Writein complete! Here is the final leaderboard:\n{}".format(
-            await self.generate_leaderboard(writein)
-        )
+        response = "Writein complete!\n"
+
+        if not writein.wordcounts:
+            response += "Looks like nobody submitted any wordcounts, so I couldn't generate a leaderboard :frowning:"
+        else:
+            response += "Here is the final leaderboard:\n{}".format(
+                await self.generate_leaderboard(writein)
+            )
 
         del self.writeins[message.channel]
         del writein
