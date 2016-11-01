@@ -6,9 +6,8 @@ from decorators import command
 IMGUR_ID = os.getenv('IMGUR_ID')
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_SEARCH_ID = os.getenv("GOOGLE_SEARCH_ID")
-TWITCH_CLIENT_ID = os.getenv("TWITCH_CLIENT_ID")
 
-NOT_FOUND = "I couldn't find anything..."
+NOT_FOUND = "Sorry, I couldn't find anything."
 
 
 class Search(Plugin):
@@ -24,10 +23,6 @@ class Search(Plugin):
             {
                 'name': '!youtube [search_term]',
                 'description': 'Search YouTube'
-            },
-            {
-                'name': '!twitch [channel_name]',
-                'description': 'Search for a Twitch channel'
             },
             {
                 'name': '!imgur [search_term]',
@@ -69,29 +64,6 @@ class Search(Plugin):
         if data['items']:
             video = data['items'][0]
             response = "https://youtu.be/" + video['id']['videoId']
-        else:
-            response = NOT_FOUND
-
-        await self.bot.send_message(message.channel, response)
-
-    @command(pattern='^!twitch (.*)$')
-    async def twitch(self, message, args):
-        query = args[0]
-        url = "https://api.twitch.tv/kraken/search/channels"
-
-        headers = {"Client-ID": TWITCH_CLIENT_ID}
-        with aiohttp.ClientSession() as session:
-            async with session.get(url,
-                                   params={"q": query},
-                                   headers=headers) as resp:
-                data = await resp.json()
-
-        if data['channels']:
-            channel = data['channels'][0]
-            response = "\n**" + channel['display_name'] + "**: " + channel['url']
-            response += " {0[followers]} followers & {0[views]} views".format(
-                channel
-            )
         else:
             response = NOT_FOUND
 
