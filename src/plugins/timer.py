@@ -32,15 +32,15 @@ class Timer(Plugin):
         commands = [
             {
                 'name': '!timer [i]',
-                'description': 'Start an [i]-minute timer'
+                'description': 'Start an `[i]`-minute timer.'
             },
             {
                 'name': '!timer check',
-                'description': 'Check if a timer is running, show how many minutes remain if so'
+                'description': 'Check if a timer is running, show how many minutes remain if so.'
             },
             {
                 'name': '!timer cancel',
-                'description': 'Cancel an existing timer'
+                'description': 'Cancel an existing timer.'
             }
         ]
         return commands

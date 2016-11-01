@@ -14,16 +14,16 @@ class Moderator(Plugin):
         commands = [
             {
                 'name': '!clear [user] [num]',
-                'description': 'Delete the last `num` messages. Optionally, out of the last `num` messages, delete '
-                               'all made by `user`.'
+                'description': 'Delete the last `[num]` messages. Optionally, out of the last `[num]` messages, delete '
+                               'all made by `[user]`.'
             },
             {
                 'name': '!mute [user]',
-                'description': 'Mutes a user, preventing them from sending messages in the current channel.'
+                'description': 'Mutes the given `[user]`, preventing them from sending messages in the current channel.'
             },
             {
                 'name': '!unmute [user]',
-                'description': 'Unmutes a muted user, allowing them to send messages in the current channel.'
+                'description': 'Unmutes a muted `[user]`, allowing them to send messages in the current channel.'
             }
         ]
         return commands
