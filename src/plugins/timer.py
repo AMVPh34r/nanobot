@@ -2,8 +2,6 @@ import asyncio
 from plugin import Plugin
 from decorators import command
 
-NOT_FOUND = "I couldn't find anything..."
-
 
 class TimerObj(object):
     channel = None
