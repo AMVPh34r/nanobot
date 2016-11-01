@@ -19,7 +19,8 @@ class TimerObj(object):
     async def time_remaining(self):
         if self.remaining < 60:
             return self.remaining, "second{}".format("" if self.remaining == 1 else "s")
-        return self.remaining//60, "minute{}".format("" if self.remaining//60 == 1 else "s")
+        rem_min = int(round(self.remaining/60))
+        return rem_min, "minute{}".format("" if rem_min == 1 else "s")
 
 
 class Timer(Plugin):
@@ -32,15 +33,15 @@ class Timer(Plugin):
         commands = [
             {
                 'name': '!timer [i]',
-                'description': 'Start an [i]-minute timer'
+                'description': 'Start an `[i]`-minute timer.'
             },
             {
                 'name': '!timer check',
-                'description': 'Check if a timer is running, show how many minutes remain if so'
+                'description': 'Check if a timer is running, show how many minutes remain if so.'
             },
             {
                 'name': '!timer cancel',
-                'description': 'Cancel an existing timer'
+                'description': 'Cancel an existing timer.'
             }
         ]
         return commands
