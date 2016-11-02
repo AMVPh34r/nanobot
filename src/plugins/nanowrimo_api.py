@@ -33,7 +33,9 @@ class NaNoWriMoAPI(Plugin):
             response = "{name} has written {count} words so far!\n" \
                        "{name}'s profile: {url}".format(
                             name=root.find('uname').text,
-                            count=root.find('user_wordcount').text,
+                            count='{:,}'.format(
+                                int(root.find('user_wordcount').text)
+                            ),
                             url="http://nanowrimo.org/participants/{}".format(root.find('uname').text)
                         )
 
