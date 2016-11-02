@@ -48,6 +48,15 @@ class Replies(Plugin):
             "{nick} x {user} 4ever",
             "You're not so bad yourself, {user}!"
         ],
+        r"(ty|thank(s| (yo)?u)?)": [
+            "Anytime, {user}!",
+            "Anytime!",
+            "No problemo!",
+            "No problem!",
+            "You're welcome!",
+            "Welcome!",
+            "Don't mention it!"
+        ],
         r"will (yo)?u marry me": [
             "I'm so sorry, {user}, but I'm seeing somebot else already.",
             "Let's take this one step at a time.",
