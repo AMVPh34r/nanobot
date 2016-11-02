@@ -15,7 +15,12 @@ class Replies(Plugin):
             "That's my name, don't wear it out.",
             "You called, {mention}?",
             "Whoa that's my name that's me {nick}!",
-            "Need something, {mention}?"
+            "Need something, {mention}?",
+            "That's me, {nick}!",
+            "I'm awake, I'm up, what is it?",
+            "I have been summoned.",
+            "Friendly neighborhood {nick}, reporting for duty!",
+            "It me"
         ],
         r"(h(i|ello|ey)|(what'?s |'?s)?up)": [
             "Hi there!",
@@ -25,7 +30,7 @@ class Replies(Plugin):
             "Hey!",
             "Hello hello!"
         ],
-        r"(fuc?k (yo)?u|(piece of|pizza) shit|asshole|(i )?(hate|h8) (y(ou|a)|u))": [
+        r"(f(uc?|ric)k (yo)?u|(piece of|pizza) shit|asshole|(i )?(hate|h8) (y(ou|a)|u))": [
             "That was just uncalled for...",
             "Yeah, up yours too, buddy!",
             "wow rude",
@@ -33,14 +38,23 @@ class Replies(Plugin):
             ":cry:",
             "Why the hostility, {mention}?"
         ],
-        r"((i )?(love|luv|<3|❤) (y(ou|a)|u)|ily|(you'?re|u ?r|you( are)?) (the|da) best)": [
+        r"((i )?(love|luv|<3|❤) (y(ou|a)|u)|il(y|u)|(you'?re|u ?r|you( are)?) ((the|da) best|my fav(ou?rite)?))": [
             "Awww :heart:",
             "Aw shucks :blush:",
-            "Right back at you!",
+            "Right back at you, {user}!",
+            "Back at ya!"
             "love u too bby",
             ":eyes:",
             "{nick} x {user} 4ever",
             "You're not so bad yourself, {user}!"
+        ],
+        r"will (yo)?u marry me": [
+            "I'm so sorry, {user}, but I'm seeing somebot else already.",
+            "Let's take this one step at a time.",
+            "You know what? Let's do it, let's be spontaneous.",
+            "I've already planned it all out: a wonderful wedding at the local bookstore and a honeymoon at Random"
+            "House Publishing!",
+            "I will not be a part of your shipfic."
         ]
     }
 
@@ -60,7 +74,7 @@ class Replies(Plugin):
             for key, resps in self.responses.items():
                 if key == "":
                     continue
-                if re.search(r'\b' + key + r'\b', message.content, flags=re.IGNORECASE):
+                if re.search(r'\b{}\b'.format(key), message.content, flags=re.IGNORECASE):
                     response = random.choice(resps)
             response = response.replace(
                 "{user}", message.author.name
