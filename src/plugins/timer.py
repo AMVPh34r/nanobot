@@ -4,15 +4,11 @@ from decorators import command
 
 
 class TimerObj(object):
-    channel = None
-    length = 0
-    remaining = 0
-    is_active = False
-
     def __init__(self, channel, length):
         self.channel = channel
         self.length = int(length) * 60
         self.remaining = self.length
+        self.is_active = False
 
     async def time_remaining(self):
         if self.remaining < 60:

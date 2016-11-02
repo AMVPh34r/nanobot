@@ -3,14 +3,17 @@ from decorators import command
 
 
 class WriteinObj(object):
-    channel = None
-    started_by = None
-    is_active = False
-    wordcounts = {}
-
     def __init__(self, channel, started_by):
-        self.channel = channel
+        self.channel_id = channel.id
         self.started_by = started_by
+        self.is_active = False
+        self.wordcounts = {}
+
+    def __str__(self):
+        return "Writein Object for channel {}, started by {}".format(
+            self.channel_id,
+            self.started_by.name
+        )
 
     async def start(self):
         self.is_active = True
@@ -20,7 +23,7 @@ class WriteinObj(object):
 
     async def submit_wordcount(self, user, count):
         if self.is_active:
-            self.wordcounts[user.id] = count
+            self.wordcounts[user.id] = int(count)
         return self.is_active
 
     async def get_wordcount(self, user):
@@ -65,15 +68,20 @@ class Writein(Plugin):
         return commands
 
     async def get_writein(self, channel):
-        if channel in self.writeins.keys():
-            writein = self.writeins[channel]
+        if channel.id in self.writeins.keys():
+            writein = self.writeins[channel.id]
+
             if writein.is_active:
                 return writein
             else:
-                del self.writeins[channel]
+                del self.writeins[channel.id]
+                del writein
         return None
 
-    async def generate_leaderboard(self, writein):
+    async def generate_leaderboard(self, channel):
+        writein = await self.get_writein(channel)
+        if writein is None or not writein.is_active:
+            return None
         leaderboard = await writein.leaderboard()
         record_template = "**{name}**: `{count}`"
         response = ""
@@ -81,6 +89,7 @@ class Writein(Plugin):
             user = await self.bot.get_user_info(record[0])
             count = record[1]
             response += record_template.format(name=user.name, count=count) + "\n"
+        del writein
         return response
 
     @command(pattern='^!writein start$')
@@ -97,10 +106,12 @@ class Writein(Plugin):
         del writein
         writein = WriteinObj(message.channel, message.author)
         await writein.start()
-        self.writeins[message.channel] = writein
+        self.writeins[message.channel.id] = writein
         response = "{} started a writein! Let's get writing!\n" \
                    "Be sure to regularly submit your wordcount for this writein with `!writein report [count]`"\
             .format(message.author.name)
+
+        del writein
 
         await self.bot.send_message(message.channel, response)
 
@@ -118,6 +129,9 @@ class Writein(Plugin):
         response = "{}: Successfully updated your wordcount for this writein to {}!".format(
             message.author.mention, count
         )
+
+        del writein
+
         await self.bot.send_message(message.channel, response)
 
     @command(pattern='^!writein check$')
@@ -138,6 +152,9 @@ class Writein(Plugin):
             response = "{}, your current wordcount is {}".format(
                 message.author.mention, count
             )
+
+        del writein
+
         await self.bot.send_message(message.channel, response)
 
     @command(pattern='^!writein leaderboard$')
@@ -154,8 +171,11 @@ class Writein(Plugin):
                        "try again!"
         else:
             response = "Here's the leaderboard for the current writein:\n{}".format(
-                await self.generate_leaderboard(writein)
+                await self.generate_leaderboard(message.channel)
             )
+
+        del writein
+
         await self.bot.send_message(message.channel, response)
 
     @command(pattern='^!writein finish$')
@@ -181,7 +201,7 @@ class Writein(Plugin):
             response += "Looks like nobody submitted any wordcounts, so I couldn't generate a leaderboard :frowning:"
         else:
             response += "Here is the final leaderboard:\n{}".format(
-                await self.generate_leaderboard(writein)
+                await self.generate_leaderboard(message.channel)
             )
 
         del self.writeins[message.channel]
