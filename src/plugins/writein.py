@@ -4,14 +4,14 @@ from decorators import command
 
 class WriteinObj(object):
     def __init__(self, channel, started_by):
-        self.channel_id = channel.id
+        self.channel = channel
         self.started_by = started_by
         self.is_active = False
         self.wordcounts = {}
 
     def __str__(self):
         return "Writein Object for channel {}, started by {}".format(
-            self.channel_id,
+            self.channel.id,
             self.started_by.name
         )
 
@@ -75,12 +75,11 @@ class Writein(Plugin):
                 return writein
             else:
                 del self.writeins[channel.id]
-                del writein
         return None
 
     async def generate_leaderboard(self, channel):
         writein = await self.get_writein(channel)
-        if writein is None or not writein.is_active:
+        if writein is None:
             return None
         leaderboard = await writein.leaderboard()
         record_template = "**{name}**: `{count}`"
@@ -89,7 +88,6 @@ class Writein(Plugin):
             user = await self.bot.get_user_info(record[0])
             count = record[1]
             response += record_template.format(name=user.name, count=count) + "\n"
-        del writein
         return response
 
     @command(pattern='^!writein start$')
@@ -103,15 +101,12 @@ class Writein(Plugin):
             await self.bot.send_message(message.channel, response)
             return
 
-        del writein
         writein = WriteinObj(message.channel, message.author)
         await writein.start()
         self.writeins[message.channel.id] = writein
         response = "{} started a writein! Let's get writing!\n" \
                    "Be sure to regularly submit your wordcount for this writein with `!writein report [count]`"\
             .format(message.author.name)
-
-        del writein
 
         await self.bot.send_message(message.channel, response)
 
@@ -129,8 +124,6 @@ class Writein(Plugin):
         response = "{}: Successfully updated your wordcount for this writein to {}!".format(
             message.author.mention, count
         )
-
-        del writein
 
         await self.bot.send_message(message.channel, response)
 
@@ -153,8 +146,6 @@ class Writein(Plugin):
                 message.author.mention, count
             )
 
-        del writein
-
         await self.bot.send_message(message.channel, response)
 
     @command(pattern='^!writein leaderboard$')
@@ -174,8 +165,6 @@ class Writein(Plugin):
                 await self.generate_leaderboard(message.channel)
             )
 
-        del writein
-
         await self.bot.send_message(message.channel, response)
 
     @command(pattern='^!writein finish$')
@@ -194,9 +183,7 @@ class Writein(Plugin):
             await self.bot.send_message(message.channel, response)
             return
 
-        await writein.finish()
         response = "Writein complete!\n"
-
         if not writein.wordcounts:
             response += "Looks like nobody submitted any wordcounts, so I couldn't generate a leaderboard :frowning:"
         else:
@@ -204,7 +191,8 @@ class Writein(Plugin):
                 await self.generate_leaderboard(message.channel)
             )
 
-        del self.writeins[message.channel]
+        await writein.finish()
+        del self.writeins[message.channel.id]
         del writein
 
         await self.bot.send_message(message.channel, response)

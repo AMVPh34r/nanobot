@@ -41,12 +41,12 @@ class Timer(Plugin):
         return commands
 
     async def get_timer(self, channel):
-        if channel in self.timers.keys():
-            timer = self.timers[channel]
+        if channel.id in self.timers.keys():
+            timer = self.timers[channel.id]
             if timer.is_active:
                 return timer
             else:
-                del self.timers[channel]
+                del self.timers[channel.id]
         return None
 
     async def timer_run(self, timer):
@@ -60,7 +60,7 @@ class Timer(Plugin):
     async def timer_complete(self, timer):
         response = "Ding! {}-minute timer completed!".format(timer.length // 60)
         await self.bot.send_message(timer.channel, response)
-        del self.timers[timer.channel]
+        del self.timers[timer.channel.id]
         del timer
 
     @command(pattern='^!timer ([0-9]*)$')
@@ -80,7 +80,7 @@ class Timer(Plugin):
 
         del timer
         timer = TimerObj(message.channel, length)
-        self.timers[message.channel] = timer
+        self.timers[message.channel.id] = timer
         self.bot.loop.create_task(self.timer_run(timer))
         response = "Started a {}-minute timer.".format(length)
 
@@ -105,7 +105,7 @@ class Timer(Plugin):
     async def timer_cancel(self, message, args):
         timer = await self.get_timer(message.channel)
         if timer:
-            del self.timers[message.channel]
+            del self.timers[message.channel.id]
             response = "{}-minute timer canceled.".format(timer.length//60)
             del timer
         else:
