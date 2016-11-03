@@ -19,6 +19,11 @@ class NameGenerator(Plugin):
             {
                 'name': '!randomname',
                 'description': 'Generate a random first and last name.'
+            },
+            {
+                'name': '!randomname [gender]',
+                'description': 'Generate a gendered random first and last name. `f/fem/female/feminine` or '
+                               '`m/mas/male/masculine`'
             }
         ]
         return commands
@@ -30,6 +35,38 @@ class NameGenerator(Plugin):
             num=1,
             surname="yes"
         )
+        response_template = "{mention}, here's a name for you: `{firstname} {lastname}`"
+
+        with aiohttp.ClientSession() as session:
+            async with session.get(api_url) as resp:
+                resp_text = await resp.text()
+                root = ET.fromstring(resp_text)
+        if root.find('error') is not None:
+            response = "Error: {}".format(
+                root.find('error').text
+            )
+        else:
+            response = response_template.format(
+                mention=message.author.mention,
+                firstname=root.find('names')[0].text,
+                lastname=root.find('names')[1].text
+            )
+
+        await self.bot.send_message(message.channel, response)
+
+    @command(pattern='^!randomname (f(em(inine|ale)?)?|m(a(s(culine)?|le))?)$')
+    async def random_name_gendered(self, message, args):
+        gender = args[0]
+        api_url = self.api_url_template.format(
+            key=BTN_API_KEY,
+            num=1,
+            surname="yes"
+        )
+        api_url = "{}&gender={}".format(
+            api_url,
+            gender[0]
+        )
+
         response_template = "{mention}, here's a name for you: `{firstname} {lastname}`"
 
         with aiohttp.ClientSession() as session:
