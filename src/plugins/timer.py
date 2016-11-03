@@ -4,9 +4,10 @@ from decorators import command
 
 
 class TimerObj(object):
-    def __init__(self, channel, length):
+    def __init__(self, channel, length, reminder=None):
         self.channel = channel
         self.length = int(length) * 60
+        self.reminder = int(reminder) * 60 if reminder is not None else None
         self.remaining = self.length
         self.is_active = False
 
@@ -53,9 +54,21 @@ class Timer(Plugin):
         timer.is_active = True
         while timer.remaining > 0:
             timer.remaining -= 1
+            if timer.reminder is not None and timer.remaining == timer.reminder:
+                await self.timer_reminder(timer)
             await asyncio.sleep(1)
         timer.is_active = False
         await self.timer_complete(timer)
+
+    async def timer_reminder(self, timer):
+        remaining = await timer.time_remaining()
+        response = "Reminder! {} {} remaining!".format(
+            remaining[0],
+            remaining[1]
+        )
+        timer.reminder = None
+
+        await self.bot.send_message(timer.channel, response)
 
     async def timer_complete(self, timer):
         response = "Ding! {}-minute timer completed!".format(timer.length // 60)
@@ -65,7 +78,7 @@ class Timer(Plugin):
 
     @command(pattern='^!timer ([0-9]*)$')
     async def timer_start(self, message, args):
-        length = args[0]
+        length = int(args[0])
         timer = await self.get_timer(message.channel)
         if timer:
             remaining = await timer.time_remaining()
@@ -80,6 +93,30 @@ class Timer(Plugin):
 
         del timer
         timer = TimerObj(message.channel, length)
+        self.timers[message.channel.id] = timer
+        self.bot.loop.create_task(self.timer_run(timer))
+        response = "Started a {}-minute timer.".format(length)
+
+        await self.bot.send_message(message.channel, response)
+
+    @command(pattern='^!timer ([0-9]*) ([0-9]*)$')
+    async def timer_reminder_start(self, message, args):
+        length = int(args[0])
+        reminder = int(args[1])
+        timer = await self.get_timer(message.channel)
+        if timer:
+            remaining = await timer.time_remaining()
+            response = "There is already a {}-minute timer running with {} {} left.\n" \
+                       "You can cancel it with `!timer cancel`".format(
+                            timer.length // 60,
+                            remaining[0],
+                            remaining[1]
+                        )
+            await self.bot.send_message(message.channel, response)
+            return
+
+        del timer
+        timer = TimerObj(message.channel, length, reminder)
         self.timers[message.channel.id] = timer
         self.bot.loop.create_task(self.timer_run(timer))
         response = "Started a {}-minute timer.".format(length)
