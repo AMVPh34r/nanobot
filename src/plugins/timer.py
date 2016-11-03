@@ -71,7 +71,10 @@ class Timer(Plugin):
         await self.bot.send_message(timer.channel, response)
 
     async def timer_complete(self, timer):
-        response = "Ding! {}-minute timer completed!".format(timer.length // 60)
+        response = "Ding! {}-minute timer completed!{}".format(
+            timer.length // 60,
+            " That was fast!" if timer.length == 0 else ""
+        )
         await self.bot.send_message(timer.channel, response)
         del self.timers[timer.channel.id]
         del timer
