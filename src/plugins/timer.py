@@ -92,6 +92,11 @@ class Timer(Plugin):
             return
 
         del timer
+        if length < 0:
+            response = "Sorry, you can't set a timer in the past!"
+            await self.bot.send_message(message.channel, response)
+            return
+
         timer = TimerObj(message.channel, length)
         self.timers[message.channel.id] = timer
         self.bot.loop.create_task(self.timer_run(timer))
@@ -116,6 +121,15 @@ class Timer(Plugin):
             return
 
         del timer
+        if reminder > length:
+            response = "You can't set a reminder greater than the timer's length!"
+            await self.bot.send_message(message.channel, response)
+            return
+        if length < 0 or reminder < 0:
+            response = "Sorry, you can't set a timer in the past!"
+            await self.bot.send_message(message.channel, response)
+            return
+
         timer = TimerObj(message.channel, length, reminder)
         self.timers[message.channel.id] = timer
         self.bot.loop.create_task(self.timer_run(timer))
