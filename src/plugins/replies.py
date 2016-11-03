@@ -101,7 +101,7 @@ class Replies(Plugin):
                     response = random.choice(resps)
                     break
             response = response.replace(
-                "{user}", message.author.name
+                "{user}", message.author.display_name
             ).replace(
                 "{mention}", message.author.mention
             ).replace(
