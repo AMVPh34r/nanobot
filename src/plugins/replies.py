@@ -52,7 +52,7 @@ class Replies(Plugin):
             "Awww :heart:",
             "Aw shucks :blush:",
             "Right back at you, {user}!",
-            "Back at ya!"
+            "Back at ya!",
             "love u too bby",
             ":eyes:",
             "{nick} x {user} 4ever",
