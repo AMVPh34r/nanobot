@@ -39,7 +39,7 @@ class Replies(Plugin):
             "Hi! :grinning:",
             "Hey there! :smiley:"
         ],
-        r"(f(uc?|ric)k (yo)?u|(piece of|pizza) shit|asshole|(i )?(hate|h8) (y(ou|a)|u))": [
+        r"(f(uc?|ric)k (yo)?u|(piece of|pizza) shit|asshole|(i )?(hate|h8) (y(ou|a)|u))|(yo)?u suc?k": [
             "That was just uncalled for...",
             "Yeah, up yours too, buddy!",
             "wow rude",
