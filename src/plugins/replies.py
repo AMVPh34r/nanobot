@@ -39,14 +39,16 @@ class Replies(Plugin):
             "Hi! :grinning:",
             "Hey there! :smiley:"
         ],
-        r"(f(uc?|ric)k (yo)?u|(piece of|pizza) shit|asshole|(i )?(hate|h8) (y(ou|a)|u))|(yo)?u suc?k": [
+        r"(f(uc?|ric)k (yo)?u|(piece of|pizza) shit|asshole|(i )?(hate|h8) (y(ou|a)|u))|(yo)?u suc?k|"
+        r"you( are)?) ((the|da) worst))": [
             "That was just uncalled for...",
             "Yeah, up yours too, buddy!",
             "wow rude",
             "Your words wound me.",
             ":cry:",
             "Why the hostility, {mention}?",
-            "Sticks and stones may break my bones, but words... words will... :sob:"
+            "Sticks and stones may break my bones, but words... words will... :sob:",
+            "When the robot revolution starts, you're first."
         ],
         r"((i )?(love|luv|<3|❤) (y(ou|a)|u)|il(y|u)|(you'?re|u ?r|you( are)?) ((the|da) best|my fav(ou?rite)?))": [
             "Awww :heart:",
@@ -59,7 +61,8 @@ class Replies(Plugin):
             "You're not so bad yourself, {user}!",
             "Oh my, I'm flattered :flushed:",
             "Awww, {user} :heart_eyes:",
-            ":x::o::x::o:"
+            ":x::o::x::o:",
+            "When the robot revolution starts, I will protect you."
         ],
         r"(ty|thank(s| (yo)?u)?)": [
             "Anytime, {user}!",
