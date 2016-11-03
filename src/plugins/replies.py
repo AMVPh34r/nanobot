@@ -99,6 +99,7 @@ class Replies(Plugin):
                     continue
                 if re.search(r'\b{}\b'.format(key), message.content, flags=re.IGNORECASE):
                     response = random.choice(resps)
+                    break
             response = response.replace(
                 "{user}", message.author.name
             ).replace(
