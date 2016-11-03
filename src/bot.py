@@ -3,7 +3,7 @@ import logging
 from plugin_manager import PluginManager
 
 APP_NAME = "NaNoBot"
-APP_VERSION = "1.2.2"
+APP_VERSION = "1.2.3"
 APP_AUTHOR = "Alex Schaeffer"
 
 log = logging.getLogger('discord')
