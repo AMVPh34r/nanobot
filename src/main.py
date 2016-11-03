@@ -8,6 +8,7 @@ from plugins.moderator import Moderator
 from plugins.replies import Replies
 from plugins.magic_eight_ball import EightBall
 from plugins.search import Search
+from plugins.name_generator import NameGenerator
 from plugins.timer import Timer
 from plugins.writein import Writein
 
