@@ -28,8 +28,8 @@ class Timer(Plugin):
         commands = [
             {
                 'name': '!timer [x] [y]',
-                'description': 'Start an `[x]`-minute timer. Optionally add `[y]` to send a reminder when there are'
-                               '`[y]` minutes left.'
+                'description': 'Start an `[x]`-minute timer in the channel. Optionally add `[y]` to send a reminder '
+                               'when there are `[y]` minutes left.'
             },
             {
                 'name': '!timer check',
