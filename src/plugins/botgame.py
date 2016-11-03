@@ -11,5 +11,5 @@ class BotGame(Plugin):
     async def on_ready(self):
         if self.game_name:
             self.game = discord.Game(name=self.game_name)
-        await self.bot.change_status(self.game)
+        await self.bot.change_presence(game=self.game)
         return

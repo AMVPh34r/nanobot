@@ -20,7 +20,12 @@ class Replies(Plugin):
             "I'm awake, I'm up, what is it?",
             "I have been summoned.",
             "Friendly neighborhood {nick}, reporting for duty!",
-            "It me"
+            "It me",
+            "I heard my name!",
+            "Yes, {user}?",
+            "That me!",
+            "It's-a me, {nick}!",
+            "Huh?"
         ],
         r"(h(i|ello|ey)|(what'?s |'?s)?up)": [
             "Hi there!",
@@ -28,7 +33,11 @@ class Replies(Plugin):
             "Hi, {user}!",
             "'Suuup?",
             "Hey!",
-            "Hello hello!"
+            "Hello hello!",
+            "Heyyyy!",
+            "Hey there, {user}!",
+            "Hi! :grinning:",
+            "Hey there! :smiley:"
         ],
         r"(f(uc?|ric)k (yo)?u|(piece of|pizza) shit|asshole|(i )?(hate|h8) (y(ou|a)|u))": [
             "That was just uncalled for...",
@@ -36,7 +45,8 @@ class Replies(Plugin):
             "wow rude",
             "Your words wound me.",
             ":cry:",
-            "Why the hostility, {mention}?"
+            "Why the hostility, {mention}?",
+            "Sticks and stones may break my bones, but words... words will... :sob:"
         ],
         r"((i )?(love|luv|<3|❤) (y(ou|a)|u)|il(y|u)|(you'?re|u ?r|you( are)?) ((the|da) best|my fav(ou?rite)?))": [
             "Awww :heart:",
@@ -46,7 +56,20 @@ class Replies(Plugin):
             "love u too bby",
             ":eyes:",
             "{nick} x {user} 4ever",
-            "You're not so bad yourself, {user}!"
+            "You're not so bad yourself, {user}!",
+            "Oh my, I'm flattered :flushed:",
+            "Awww, {user} :heart_eyes:",
+            ":x::o::x::o:"
+        ],
+        r"(ty|thank(s| (yo)?u)?)": [
+            "Anytime, {user}!",
+            "Anytime!",
+            "No problemo!",
+            "No problem!",
+            "You're welcome!",
+            "Welcome!",
+            "Don't mention it!",
+            "Not a problem! :ok_hand:"
         ],
         r"will (yo)?u marry me": [
             "I'm so sorry, {user}, but I'm seeing somebot else already.",
@@ -76,6 +99,7 @@ class Replies(Plugin):
                     continue
                 if re.search(r'\b{}\b'.format(key), message.content, flags=re.IGNORECASE):
                     response = random.choice(resps)
+                    break
             response = response.replace(
                 "{user}", message.author.name
             ).replace(
