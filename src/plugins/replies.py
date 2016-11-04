@@ -128,9 +128,15 @@ class Replies(Plugin):
                 ) or self.bot.user.id in [user.id for user in message.mentions]:
             response = random.choice(self.responses[''])
             for key, resps in self.responses.items():
-                if key == "":
+                key_search = key.replace(
+                    "{bot}", "({}|{})".format(
+                        self.bot.__name__,
+                        server_nick
+                    )
+                )
+                if key_search == "":
                     continue
-                if re.search(r'\b{}\b'.format(key), message.content, flags=re.IGNORECASE):
+                if re.search(r'\b{}\b'.format(key_search), message.content, flags=re.IGNORECASE):
                     response = random.choice(resps)
                     break
             response = response.replace(
