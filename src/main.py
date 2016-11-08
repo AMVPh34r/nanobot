@@ -10,6 +10,7 @@ from plugins.magic_eight_ball import EightBall
 from plugins.search import Search
 from plugins.nanowrimo_api import NaNoWriMoAPI
 from plugins.name_generator import NameGenerator
+from plugins.thesaurus import Thesaurus
 from plugins.timer import Timer
 from plugins.writein import Writein
 
