@@ -81,6 +81,36 @@ class Replies(Plugin):
             "I've already planned it all out: a wonderful wedding at the local bookstore and a honeymoon at Random"
             "House Publishing!",
             "I will not be a part of your shipfic."
+        ],
+        r"(g'|good )mornin[g']?": [
+            "Good morning!",
+            "Good morning, {user}!",
+            "Good morning, {mention}!",
+            "'Morning!",
+            "'Morning, {user}!"
+        ],
+        r"good afternoon": [
+            "Good afternoon!",
+            "Good afternoon, {user}!",
+            "Good afternoon, {mention}!",
+            "Afternoon!",
+            "Afternoon, {user}!"
+        ],
+        r"good evenin[g']": [
+            "Good evening!",
+            "Good evening, {user}!",
+            "Good evening, {mention}!",
+            "'Evening!",
+            "'Evening, {user}!"
+        ],
+        r"(g'|good ?)night": [
+            "Good night!",
+            "Good night, {user}!",
+            "Good night, {mention}!",
+            "'Night!",
+            "'Night, {user}!",
+            "See you later!",
+            "See you later, {user}!"
         ]
     }
 
@@ -98,9 +128,15 @@ class Replies(Plugin):
                 ) or self.bot.user.id in [user.id for user in message.mentions]:
             response = random.choice(self.responses[''])
             for key, resps in self.responses.items():
-                if key == "":
+                key_search = key.replace(
+                    "{bot}", "({}|{})".format(
+                        self.bot.__name__,
+                        server_nick
+                    )
+                )
+                if key_search == "":
                     continue
-                if re.search(r'\b{}\b'.format(key), message.content, flags=re.IGNORECASE):
+                if re.search(r'\b{}\b'.format(key_search), message.content, flags=re.IGNORECASE):
                     response = random.choice(resps)
                     break
             response = response.replace(
