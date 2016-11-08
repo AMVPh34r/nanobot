@@ -50,7 +50,8 @@ class Writein(Plugin):
             },
             {
                 'name': '!writein report [x]',
-                'description': 'Report your wordcount for the writein.'
+                'description': 'Report your wordcount for the writein. Optionally use `+x` to add `[x]` to your current'
+                               'wordcount.'
             },
             {
                 'name': '!writein check',
@@ -123,6 +124,25 @@ class Writein(Plugin):
         await writein.submit_wordcount(message.author, count)
         response = "{}: Successfully updated your wordcount for this writein to {}!".format(
             message.author.mention, count
+        )
+
+        await self.bot.send_message(message.channel, response)
+
+    @command(pattern='^!writein report \+([0-9]*)$')
+    async def writein_report_add(self, message, args):
+        count = args[0]
+        writein = await self.get_writein(message.channel)
+        if not writein or not writein.is_active:
+            response = "There's currently no active writein.\n" \
+                       "To start one, send `!writein start`."
+            await self.bot.send_message(message.channel, response)
+            return
+
+        cur_count = await writein.get_wordcount(message.author)
+        new_count = (cur_count if cur_count is not None else 0) + int(count)
+        await writein.submit_wordcount(message.author, new_count)
+        response = "{}: Successfully updated your wordcount for this writein to {}!".format(
+            message.author.mention, new_count
         )
 
         await self.bot.send_message(message.channel, response)
