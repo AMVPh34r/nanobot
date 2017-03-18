@@ -50,7 +50,7 @@ class Help(Plugin):
                 else:
                     messages[-1] += message
             for cmd in plugin['commands']:
-                message = "   **{}** {}\n".format(cmd['name'], cmd.get('description', ''))
+                message = "   **{}** - {}\n".format(cmd['name'], cmd.get('description', ''))
                 if len(messages[-1] + message) > 2000:
                     messages.append(message)
                 else:
