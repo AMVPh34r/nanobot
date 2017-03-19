@@ -7,6 +7,7 @@ from plugins.info import Info
 from plugins.moderator import Moderator
 from plugins.replies import Replies
 from plugins.magic_eight_ball import EightBall
+from plugins.dieroll import DieRoll
 from plugins.say import Say
 from plugins.search import Search
 from plugins.nanowrimo_api import NaNoWriMoAPI
