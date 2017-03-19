@@ -38,7 +38,7 @@ class DieRoll(Plugin):
         if num_sides == 2:
             response_template = "I flipped {dice} coin{plural}{buff} and got: {results}"
         else:
-            response_template = "I rolled {dice} d{sides}{plural}{buff}{isweird} and got: {results}"
+            response_template = "I rolled {dice} d{sides}{plural}{buff} and got: {results}"
 
         for i in range(num_dice):
             results.append(str(Die(num_sides, buff).roll()))
@@ -51,7 +51,6 @@ class DieRoll(Plugin):
                 "+" if buff > 0 else "",
                 buff
             )),
-            isweird=" (somehow)" if num_sides in [2, 3] else "",
             results=", ".join(results)
         )
         await self.bot.send_message(
