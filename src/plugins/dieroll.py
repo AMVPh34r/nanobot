@@ -41,10 +41,14 @@ class DieRoll(Plugin):
             results.append(str(Die(num_sides, buff).roll()))
 
         response = response_template.format(
-            dice=num_dice,
+            dice=num_dice if num_dice > 1 else "a",
             sides=num_sides,
             plural="s" if num_dice > 1 else "",
-            isweird="(somehow) " if num_sides in [2, 3] else "",
+            buff="" if buff == 0 else (" ({}{}) ".format(
+                "+" if buff > 0 else "",
+                buff
+            )),
+            isweird=" (somehow)" if num_sides in [2, 3] else "",
             results=", ".join(results)
         )
         await self.bot.send_message(
