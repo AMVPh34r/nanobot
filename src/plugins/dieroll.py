@@ -53,6 +53,6 @@ class DieRoll(Plugin):
     async def roll_format(self, message, args):
         await self.bot.send_message(
             message.channel,
-            "Command format: `!roll XdY`. `X` must be between 1-9 and `Y` between 2-20."
+            "Command format: `!roll XdY`. `X` must be between 1-9 and `Y` between 2-100."
         )
         return
