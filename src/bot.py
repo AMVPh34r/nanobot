@@ -19,7 +19,7 @@ class ChatBot(discord.Client):
         self.__version__ = APP_VERSION
         self.__author__ = APP_AUTHOR
         self.__copyright__ = "Copyright (c){} {}".format(
-            2016, self.__author__
+            '2016-2017', self.__author__
         )
 
     def run(self, *args):
