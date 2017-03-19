@@ -35,7 +35,10 @@ class DieRoll(Plugin):
         num_sides = int(args[1])
         buff = 0 if args[4] is None else (int(args[4]) if args[3] == "+" else int(args[4]) * -1)
         results = []
-        response_template = "I rolled {dice} d{sides}{plural} {isweird}and got: {results}"
+        if num_sides == 2:
+            response_template = "I flipped {dice} coin{plural}{buff} and got: {results}"
+        else:
+            response_template = "I rolled {dice} d{sides}{plural}{buff}{isweird} and got: {results}"
 
         for i in range(num_dice):
             results.append(str(Die(num_sides, buff).roll()))
