@@ -36,14 +36,15 @@ class DieRoll(Plugin):
         buff = 0 if args[4] is None else (int(args[4]) if args[3] == "+" else int(args[4]) * -1)
         results = []
         if num_sides == 2:
-            response_template = "I flipped {dice} coin{plural}{buff} and got: {results}"
+            response_template = "{mention} - I flipped {dice} coin{plural}{buff} and got: {results}"
         else:
-            response_template = "I rolled {dice} d{sides}{plural}{buff} and got: {results}"
+            response_template = "{mention} - I rolled {dice} d{sides}{plural}{buff} and got: {results}"
 
         for i in range(num_dice):
             results.append(str(Die(num_sides, buff).roll()))
 
         response = response_template.format(
+            mention=message.author.mention,
             dice=num_dice if num_dice > 1 else "a",
             sides=num_sides,
             plural="s" if num_dice > 1 else "",
