@@ -26,7 +26,7 @@ class DieRoll(Plugin):
         ]
         return commands
 
-    @command(pattern='^!roll ([1-9])?d(0?[2-9]$|1[0-9]$|20$)')
+    @command(pattern='^!roll ([1-9])?d(0?0?[2-9]$|[1-9][0-9]$|100$)')
     async def roll(self, message, args):
         num_dice = 1 if args[0] is None else int(args[0])
         num_sides = int(args[1])
@@ -49,7 +49,7 @@ class DieRoll(Plugin):
         )
         return
 
-    @command(pattern='^!roll(?! [1-9]?d(0?[2-9]$|1[0-9]$|20$))')
+    @command(pattern='^!roll(?! [1-9]?d(0?0?[2-9]$|[1-9][0-9]$|100$))')
     async def roll_format(self, message, args):
         await self.bot.send_message(
             message.channel,
