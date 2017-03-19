@@ -33,7 +33,7 @@ class DieRoll(Plugin):
         print(args)
         num_dice = 1 if args[0] is None else int(args[0])
         num_sides = int(args[1])
-        buff = int(args[4]) if args[3] == "+" else int(args[4]) * -1
+        buff = 0 if args[4] is None else (int(args[4]) if args[3] == "+" else int(args[4]) * -1)
         results = []
         response_template = "I rolled {dice} d{sides}{plural} {isweird}and got: {results}"
 
