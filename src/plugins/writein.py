@@ -88,7 +88,7 @@ class Writein(Plugin):
         for record in leaderboard:
             user = await self.bot.get_user_info(record[0])
             count = record[1]
-            response += record_template.format(name=user.name, count=count) + "\n"
+            response += record_template.format(name=user.display_name, count=count) + "\n"
         return response
 
     @command(pattern='^!writein start$')
@@ -97,7 +97,7 @@ class Writein(Plugin):
         if writein:
             response = "There is already a writein in progress, started by {started_by}.\n" \
                        "To complete it, {started_by} can issue the command `!writein finish`.".format(
-                            started_by=writein.started_by.name
+                            started_by=writein.started_by.display_name
                         )
             await self.bot.send_message(message.channel, response)
             return
@@ -107,7 +107,7 @@ class Writein(Plugin):
         self.writeins[message.channel.id] = writein
         response = "{} started a writein! Let's get writing!\n" \
                    "Be sure to regularly submit your wordcount for this writein with `!writein report [count]`"\
-            .format(message.author.name)
+            .format(message.author.display_name)
 
         await self.bot.send_message(message.channel, response)
 
@@ -121,9 +121,12 @@ class Writein(Plugin):
             await self.bot.send_message(message.channel, response)
             return
 
+        cur_count = await writein.get_wordcount(message.author)
         await writein.submit_wordcount(message.author, count)
-        response = "{}: Successfully updated your wordcount for this writein to {}!".format(
-            message.author.mention, count
+        response = "{}: Successfully set your wordcount for this writein! `{} > {}`".format(
+            message.author.mention,
+            cur_count if cur_count is not None else 0,
+            count
         )
 
         await self.bot.send_message(message.channel, response)
@@ -141,8 +144,10 @@ class Writein(Plugin):
         cur_count = await writein.get_wordcount(message.author)
         new_count = (cur_count if cur_count is not None else 0) + int(count)
         await writein.submit_wordcount(message.author, new_count)
-        response = "{}: Successfully updated your wordcount for this writein to {}!".format(
-            message.author.mention, new_count
+        response = "{}: Successfully updated your wordcount for this writein! `{} > {}`".format(
+            message.author.mention,
+            cur_count if cur_count is not None else 0,
+            new_count
         )
 
         await self.bot.send_message(message.channel, response)
@@ -177,6 +182,8 @@ class Writein(Plugin):
             await self.bot.send_message(message.channel, response)
             return
 
+        await self.bot.send_typing(message.channel)
+
         if not writein.wordcounts:
             response = "Looks like nobody's submitted their wordcounts yet, do so with `!writein report [count]` and " \
                        "try again!"
@@ -202,6 +209,8 @@ class Writein(Plugin):
             )
             await self.bot.send_message(message.channel, response)
             return
+
+        await self.bot.send_typing(message.channel)
 
         response = "Writein complete!\n"
         if not writein.wordcounts:
