@@ -86,7 +86,7 @@ class Writein(Plugin):
         record_template = "**{name}**: `{count}`"
         response = ""
         for record in leaderboard:
-            user = await self.bot.get_user_info(record[0])
+            user = channel.server.get_member(record[0])
             count = record[1]
             response += record_template.format(name=user.display_name, count=count) + "\n"
         return response
