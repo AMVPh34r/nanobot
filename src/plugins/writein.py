@@ -86,7 +86,7 @@ class Writein(Plugin):
         record_template = "**{name}**: `{count}`"
         response = ""
         for record in leaderboard:
-            user = channel.server.get_member(record[0])
+            user = channel.guild.get_member(record[0])
             count = record[1]
             response += record_template.format(name=user.display_name, count=count) + "\n"
         return response
@@ -182,17 +182,16 @@ class Writein(Plugin):
             await self.bot.send_message(message.channel, response)
             return
 
-        await self.bot.send_typing(message.channel)
+        async with message.channel.typing():
+            if not writein.wordcounts:
+                response = "Looks like nobody's submitted their wordcounts yet, do so with `!writein report [count]` and " \
+                           "try again!"
+            else:
+                response = "Here's the leaderboard for the current writein:\n{}".format(
+                    await self.generate_leaderboard(message.channel)
+                )
 
-        if not writein.wordcounts:
-            response = "Looks like nobody's submitted their wordcounts yet, do so with `!writein report [count]` and " \
-                       "try again!"
-        else:
-            response = "Here's the leaderboard for the current writein:\n{}".format(
-                await self.generate_leaderboard(message.channel)
-            )
-
-        await self.bot.send_message(message.channel, response)
+            await self.bot.send_message(message.channel, response)
 
     @command(pattern='^!writein finish$')
     async def writein_finish(self, message, args):
@@ -210,18 +209,17 @@ class Writein(Plugin):
             await self.bot.send_message(message.channel, response)
             return
 
-        await self.bot.send_typing(message.channel)
+        async with message.channel.typing():
+            response = "Writein complete!\n"
+            if not writein.wordcounts:
+                response += "Looks like nobody submitted any wordcounts, so I couldn't generate a leaderboard :frowning:"
+            else:
+                response += "Here is the final leaderboard:\n{}".format(
+                    await self.generate_leaderboard(message.channel)
+                )
 
-        response = "Writein complete!\n"
-        if not writein.wordcounts:
-            response += "Looks like nobody submitted any wordcounts, so I couldn't generate a leaderboard :frowning:"
-        else:
-            response += "Here is the final leaderboard:\n{}".format(
-                await self.generate_leaderboard(message.channel)
-            )
+            await writein.finish()
+            del self.writeins[message.channel.id]
+            del writein
 
-        await writein.finish()
-        del self.writeins[message.channel.id]
-        del writein
-
-        await self.bot.send_message(message.channel, response)
+            await self.bot.send_message(message.channel, response)

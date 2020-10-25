@@ -1,5 +1,7 @@
 from plugin import Plugin
 from decorators import command
+import platform
+import discord
 
 
 class Info(Plugin):
@@ -29,8 +31,8 @@ class Info(Plugin):
 
     @command(pattern='^!version$')
     async def version(self, message, args):
-        response = "{}, v{}".format(
-            self.bot.__name__, self.bot.__version__
+        response = "{}, v{}\nPython v{}\nDiscord.py v{}".format(
+            self.bot.__name__, self.bot.__version__, platform.python_version(), discord.__version__
         )
         await self.bot.send_message(message.channel, response)
         return
