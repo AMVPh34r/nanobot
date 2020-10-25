@@ -9,7 +9,7 @@ class SystemLog(Plugin):
 
     async def on_message(self, message):
         if message.author.id == self.bot.user.id:
-            server, channel = message.server, message.channel
+            server, channel = message.guild, message.channel
             logs.info("OUT >> {}#{} >> {}".format(
                 server.name,
                 channel.name,

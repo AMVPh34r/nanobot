@@ -59,7 +59,7 @@ class Help(Plugin):
 
     async def on_message(self, message):
         if message.content == '!help':
-            server = message.server
+            server = message.guild
             messages = await self.generate_help(server)
             if messages == [""]:
                 messages = ["There's no command to show"]
