@@ -35,7 +35,7 @@ class Search(Plugin):
     async def google(self, message, args):
         query = args[0]
         url = "https://www.googleapis.com/customsearch/v1"
-        with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession() as session:
             async with session.get(url, params={"q": query,
                                                 "cx": GOOGLE_SEARCH_ID,
                                                 "key": GOOGLE_API_KEY}) as resp:
@@ -55,7 +55,7 @@ class Search(Plugin):
     async def youtube(self, message, args):
         query = args[0]
         url = "https://www.googleapis.com/youtube/v3/search"
-        with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession() as session:
             async with session.get(url, params={"type": "video",
                                                 "q": query,
                                                 "part": "snippet",
@@ -74,7 +74,7 @@ class Search(Plugin):
         query = args[0]
         url = "https://api.imgur.com/3/gallery/search/viral"
         headers = {"Authorization": "Client-ID " + IMGUR_ID}
-        with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession() as session:
             async with session.get(url,
                                    params={"q": query},
                                    headers=headers) as resp:

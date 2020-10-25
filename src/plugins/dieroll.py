@@ -30,7 +30,6 @@ class DieRoll(Plugin):
 
     @command(pattern='^!roll ([1-9])?d(0?0?[2-9]|[1-9][0-9]|100)( ?([\+-]) ?(\d{1,2}))?$')
     async def roll(self, message, args):
-        print(args)
         num_dice = 1 if args[0] is None else int(args[0])
         num_sides = int(args[1])
         buff = 0 if args[4] is None else (int(args[4]) if args[3] == "+" else int(args[4]) * -1)

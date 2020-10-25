@@ -117,8 +117,8 @@ class Replies(Plugin):
     async def on_message(self, message):
         if message.author.id == self.bot.user.id:
             return
-        if message.server.me.nick:
-            server_nick = message.server.me.nick
+        if message.guild.me.nick:
+            server_nick = message.guild.me.nick
         else:
             server_nick = self.bot.user.name
         if re.search(

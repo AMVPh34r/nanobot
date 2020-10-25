@@ -48,11 +48,11 @@ def command(pattern=None, db_check=False, user_check=None, db_name=None,
                 return
 
             args = match.groups()
-            server = message.server
+            server = message.guild
             author = message.author
             author_role_ids = [role.id for role in author.roles]
 
-            is_admin = any([role.permissions.manage_server
+            is_admin = any([role.permissions.manage_guild
                             for role in author.roles])
 
             # Checking the member with the predicate
@@ -63,7 +63,7 @@ def command(pattern=None, db_check=False, user_check=None, db_name=None,
 
             log.info("{}#{}@{} >> {}".format(message.author.name,
                                              message.author.discriminator,
-                                             message.server.name,
+                                             message.guild.name,
                                              message.clean_content))
 
             await func(self, message, args)

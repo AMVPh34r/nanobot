@@ -3,7 +3,7 @@ import logging
 from plugin_manager import PluginManager
 
 APP_NAME = "NaNoBot"
-APP_VERSION = "1.4.3"
+APP_VERSION = "1.5.0"
 APP_AUTHOR = "Alex Schaeffer"
 
 log = logging.getLogger('discord')
@@ -19,7 +19,7 @@ class ChatBot(discord.Client):
         self.__version__ = APP_VERSION
         self.__author__ = APP_AUTHOR
         self.__copyright__ = "Copyright (c){} {}".format(
-            '2016-2017', self.__author__
+            '2016-2020', self.__author__
         )
 
     def run(self, *args):
@@ -33,78 +33,78 @@ class ChatBot(discord.Client):
         plugins = await self.plugin_manager.get_all(server)
         return plugins
 
-    async def send_message(self, *args, **kwargs):
-        return await super().send_message(*args, **kwargs)
+    async def send_message(self, channel, *args, **kwargs):
+        return await channel.send(*args, **kwargs)
 
     async def on_message(self, message):
-        if message.channel.is_private:
+        if isinstance(message.channel, discord.abc.PrivateChannel):
             return
 
-        server = message.server
+        server = message.guild
 
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin._on_message(message))
 
     async def on_message_edit(self, before, after):
-        if before.channel.is_private:
+        if isinstance(before.channel, discord.abc.PrivateChannel):
             return
 
-        server = after.server
+        server = after.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_message_edit(before, after))
 
     async def on_message_delete(self, message):
-        if message.channel.is_private:
+        if isinstance(message.channel, discord.abc.PrivateChannel):
             return
 
-        server = message.server
+        server = message.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_message_delete(message))
 
     async def on_channel_create(self, channel):
-        if channel.is_private:
+        if isinstance(channel, discord.abc.PrivateChannel):
             return
 
-        server = channel.server
+        server = channel.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_channel_create(channel))
 
     async def on_channel_update(self, before, after):
-        if before.is_private:
+        if isinstance(before, discord.abc.PrivateChannel):
             return
 
-        server = after.server
+        server = after.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_channel_update(before, after))
 
     async def on_channel_delete(self, channel):
-        if channel.is_private:
+        if isinstance(channel, discord.abc.PrivateChannel):
             return
 
-        server = channel.server
+        server = channel.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_channel_delete(channel))
 
     async def on_member_join(self, member):
-        server = member.server
+        server = member.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_member_join(member))
 
     async def on_member_remove(self, member):
-        server = member.server
+        server = member.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_member_remove(member))
 
     async def on_member_update(self, before, after):
-        server = after.server
+        server = after.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_member_update(before, after))
@@ -127,7 +127,7 @@ class ChatBot(discord.Client):
 
     async def on_server_role_update(self, before, after):
         server = None
-        for s in self.servers:
+        for s in self.guilds:
             if after.id in map(lambda r: r.id, s.roles):
                 server = s
                 break
@@ -143,33 +143,33 @@ class ChatBot(discord.Client):
         if after is None and before is None:
             return
         elif after is None:
-            server = before.server
+            server = before.guild
         elif before is None:
-            server = after.server
+            server = after.guild
         else:
-            server = after.server
+            server = after.guild
 
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_voice_state_update(before, after))
 
     async def on_member_ban(self, member):
-        server = member.server
+        server = member.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_member_ban(member))
 
     async def on_member_unban(self, member):
-        server = member.server
+        server = member.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_member_unban(member))
 
     async def on_typing(self, channel, user, when):
-        if channel.is_private:
+        if isinstance(channel, discord.abc.PrivateChannel):
             return
 
-        server = channel.server
+        server = channel.guild
         enabled_plugins = await self.get_plugins(server)
         for plugin in enabled_plugins:
             self.loop.create_task(plugin.on_typing(channel, user, when))

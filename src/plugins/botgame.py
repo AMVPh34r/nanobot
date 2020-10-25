@@ -18,5 +18,5 @@ class BotGame(Plugin):
 
         if self.game_name:
             self.game = discord.Game(name=self.game_name)
-        await self.bot.change_presence(game=self.game)
+        await self.bot.change_presence(activity=self.game)
         return

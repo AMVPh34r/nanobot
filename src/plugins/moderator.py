@@ -36,7 +36,7 @@ class Moderator(Plugin):
         for role in member.roles:
             authorized = any([role.name in role_names,
                              role.id in role_names,
-                             role.permissions.manage_server])
+                             role.permissions.manage_guild])
             if authorized:
                 break
         return authorized
@@ -50,8 +50,7 @@ class Moderator(Plugin):
         number = min(int(args[0]), 1000)
         if number < 1:
             return
-        deleted_messages = await self.bot.purge_from(
-            message.channel,
+        deleted_messages = await message.channel.purge(
             limit=number+1
         )
 
@@ -65,7 +64,7 @@ class Moderator(Plugin):
         )
         await asyncio.sleep(3)
 
-        await self.bot.delete_message(confirm_message)
+        await confirm_message.delete()
         return
 
     @command(pattern='^!clear <@!?([0-9]*)> ([0-9]*)$')
@@ -81,8 +80,7 @@ class Moderator(Plugin):
             return
         del_limit = int(args[1])
 
-        deleted_messages = await self.bot.purge_from(
-            message.channel,
+        deleted_messages = await message.channel.purge(
             limit=del_limit,
             check=lambda m: m.author.id == user.id or m == message
         )
@@ -93,7 +91,7 @@ class Moderator(Plugin):
             "`Deleted {} messages!`".format(message_number)
         )
         await asyncio.sleep(3)
-        await self.bot.delete_message(confirm)
+        await confirm.delete()
         return
 
     @command(pattern='^!mute <@!?([0-9]*)>$')
@@ -111,10 +109,9 @@ class Moderator(Plugin):
 
         overwrite = message.channel.overwrites_for(member)
         overwrite.send_messages = False
-        await self.bot.edit_channel_permissions(
-            message.channel,
+        await message.channel.set_permissions(
             member,
-            overwrite)
+            overwrite=overwrite)
         await self.bot.send_message(
             message.channel,
             "{} is now muted in this channel.".format(member.mention)
@@ -137,10 +134,9 @@ class Moderator(Plugin):
 
         overwrite = message.channel.overwrites_for(member)
         overwrite.send_messages = None
-        await self.bot.edit_channel_permissions(
-            message.channel,
+        await message.channel.set_permissions(
             member,
-            overwrite)
+            overwrite=overwrite)
         await self.bot.send_message(
             message.channel,
             "{} is no longer muted in this channel.".format(member.mention)
