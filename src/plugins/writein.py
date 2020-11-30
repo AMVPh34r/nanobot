@@ -1,3 +1,5 @@
+import discord
+
 from plugin import Plugin
 from decorators import command
 
@@ -86,9 +88,12 @@ class Writein(Plugin):
         record_template = "**{name}**: `{count}`"
         response = ""
         for record in leaderboard:
-            user = channel.guild.get_member(record[0])
+            user = await channel.guild.fetch_member(record[0])
             count = record[1]
-            response += record_template.format(name=user.display_name, count=count) + "\n"
+            response += record_template.format(
+                name=(user.display_name if isinstance(user, discord.member.Member) else '[name error]'),
+                count=count
+            ) + "\n"
         return response
 
     @command(pattern='^!writein start$')

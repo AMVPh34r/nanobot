@@ -1,3 +1,4 @@
+import discord
 from bot import ChatBot
 import os
 import logging
@@ -27,5 +28,5 @@ if bot_debug:
 else:
     logging.basicConfig(level=logging.INFO)
 
-bot = ChatBot()
+bot = ChatBot(intents=discord.Intents.default())
 bot.run(token)
